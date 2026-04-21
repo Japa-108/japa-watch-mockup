@@ -34,16 +34,25 @@
   header .tagline { margin: 0; color: var(--muted); font-size: 17px; }
   header .meta {
     margin: 20px auto 0;
-    max-width: 560px;
+    max-width: 600px;
     font-size: 14px;
     color: var(--muted);
-    line-height: 1.55;
+    line-height: 1.6;
   }
   main {
     max-width: 1080px;
     margin: 0 auto;
     padding: 40px 24px 80px;
   }
+  .section-title {
+    margin: 56px 0 24px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--saffron);
+  }
+  .section-title:first-of-type { margin-top: 0; }
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -55,6 +64,7 @@
     padding: 20px 20px 24px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.04);
   }
+  .card.dark img { background: #111; }
   .card img {
     width: 100%;
     height: auto;
@@ -72,39 +82,13 @@
     margin: 0;
     font-size: 14px;
     color: var(--muted);
-    line-height: 1.5;
-  }
-  .card .tag {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 3px 10px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border-radius: 20px;
-    background: #e8f5e9;
-    color: #2e7d32;
-  }
-  .placeholder {
-    background: white;
-    border-radius: 16px;
-    padding: 36px 24px;
-    text-align: center;
-    color: var(--muted);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-    border: 2px dashed var(--cream-dark);
-  }
-  .placeholder h3 {
-    margin: 0 0 10px;
-    color: var(--ink);
-    font-size: 15px;
-    font-weight: 600;
-  }
-  .placeholder .hint {
-    margin: 12px 0 0;
-    font-size: 13px;
     line-height: 1.55;
+  }
+  .card .caption code {
+    background: var(--cream);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 12.5px;
   }
   section.legend {
     margin-top: 64px;
@@ -122,7 +106,7 @@
     margin: 0 0 10px;
     font-size: 14px;
     color: var(--muted);
-    line-height: 1.6;
+    line-height: 1.65;
   }
   section.legend code {
     background: var(--cream);
@@ -145,55 +129,90 @@
   <h1>Japa 108 Watch</h1>
   <p class="tagline">Standalone Apple Watch app — current build</p>
   <p class="meta">
-    Captured on Apple Watch Series 10 (46mm) / watchOS 11.2 simulator.
-    Post Sprint 2 refactor: goal semantics in <strong>beads</strong> (not malas),
-    UX fixes for sheet overlays + picker contrast, new saffron-gradient app icon.
-    All 66 tests pass.
+    Captured 2026-04-21 on Apple Watch Series 10 (46mm) / watchOS 11.2 simulator.
+    Post Sprint&nbsp;2 refactor: goal semantics in <strong>beads</strong> end-to-end,
+    <strong>cream + dark</strong> face themes, <strong>Ring + Number</strong> display modes,
+    sheet-overlay and picker-contrast UX fixes. All 66 tests pass.
   </p>
 </header>
 
 <main>
+
+  <p class="section-title">Onboarding</p>
   <div class="grid">
 
     <div class="card">
-      <img src="screens/01-choose-display.png?v=2" alt="Choose your display">
-      <h3>Choose your display (first run)</h3>
-      <p class="caption">Pick Ring (circular progress) or Number (large digit, VoiceOver-recommended). Remembered per-user. Shows "of 1008" beads — confirms the bead-count refactor (<code>5853c95</code>) is live.</p>
-      <span class="tag">Current · 2026-04-21</span>
+      <img src="screens/01-choose-display.png?v=3" alt="Choose your display">
+      <h3>1. Choose your display (first run)</h3>
+      <p class="caption">Pick Ring (circular progress) or Number (large digit, VoiceOver-recommended). Remembered per-user. The "of 1008" hint reflects the bead-count refactor (<code>5853c95</code>).</p>
     </div>
 
-    <div class="placeholder">
-      <h3>Home screen — coming</h3>
-      <p class="hint">Post-refactor saffron Start button with "108 beads" subtitle. Tap Ring or Number in the sim to proceed, Cmd+S to save.</p>
+    <div class="card">
+      <img src="screens/02-home-cream.png?v=3" alt="Home screen, cream theme">
+      <h3>2. Home — ready to start</h3>
+      <p class="caption">Saffron Start button shows the current goal in beads. Gear opens Settings, "Change goal" jumps to the picker.</p>
     </div>
 
-    <div class="placeholder">
-      <h3>Goal picker — coming</h3>
-      <p class="hint">Presets: 11 / 54 / 108 / 1008 / 10008 beads with subtitles ("Quick practice", "Half mala", "One mala", "Nine malas", "Mahā count"). Plus Custom entry.</p>
+    <div class="card">
+      <img src="screens/03-goal-picker.png?v=3" alt="Goal picker">
+      <h3>3. Goal picker (post-refactor)</h3>
+      <p class="caption">Presets are <code>11 / 54 / 108 / 1008 / 10008</code> beads with subtitles ("Quick practice", "Half mala", "One mala", "Nine malas", "Mahā count"). Plus a Custom entry.</p>
     </div>
 
-    <div class="placeholder">
-      <h3>Counting — coming</h3>
-      <p class="hint">Mid-session counter view. Ring or Number display as chosen. Mala-boundary haptic fires every 108 taps internally.</p>
+  </div>
+
+  <p class="section-title">Counting — both display modes</p>
+  <div class="grid">
+
+    <div class="card">
+      <img src="screens/04-counting-ring-cream.png?v=3" alt="Counting in Ring mode, cream theme">
+      <h3>4. Ring display (cream)</h3>
+      <p class="caption">Bead chain wraps the dial; current count fills in saffron. "BEADS · 84 of 108" mid-mala. Mala-boundary haptic fires every 108 taps.</p>
     </div>
 
-    <div class="placeholder">
-      <h3>Settings (post-fix) — coming</h3>
-      <p class="hint">After <code>f3f8723</code> the Form/Picker was rebuilt as explicit tinted segment buttons. Selected = saffron gradient, unselected = neutral. No more invisible white-on-cream.</p>
+    <div class="card dark">
+      <img src="screens/05-counting-number-dark.png?v=3" alt="Counting in Number mode, dark theme">
+      <h3>5. Number display (dark)</h3>
+      <p class="caption">Big digit + "of 108" subtitle. Maximum legibility for low-light japa or VoiceOver users.</p>
     </div>
 
-    <div class="placeholder">
-      <h3>Navigation subscreens — coming</h3>
-      <p class="hint">Goal Picker + Settings now push as NavigationStack children (back chevron), not <code>.sheet</code> with the un-stylable system clock + X overlay.</p>
+    <div class="card">
+      <img src="screens/06-session-complete.png?v=3" alt="Session complete screen">
+      <h3>6. Session complete</h3>
+      <p class="caption">Full ring lights up at goal. Total beads + minutes shown. Saffron "Done" returns to home; secondary action to log/share.</p>
+    </div>
+
+  </div>
+
+  <p class="section-title">Settings — both themes</p>
+  <div class="grid">
+
+    <div class="card">
+      <img src="screens/07-settings-cream.png?v=3" alt="Settings, cream theme">
+      <h3>7. Settings — cream</h3>
+      <p class="caption">Face theme + Display mode as explicit segment buttons. <code>f3f8723</code> rebuilt this from a Form/Picker that rendered selected text invisibly white-on-cream.</p>
+    </div>
+
+    <div class="card dark">
+      <img src="screens/08-settings-dark.png?v=3" alt="Settings, dark theme">
+      <h3>8. Settings — dark</h3>
+      <p class="caption">Same component, dark face. Display switched here to Number — selection is unambiguous in either theme.</p>
+    </div>
+
+    <div class="card dark">
+      <img src="screens/09-settings-account.png?v=3" alt="Settings scrolled to Account">
+      <h3>9. Account &amp; About</h3>
+      <p class="caption">Sign out (saffron, destructive). Version row shows build identity for support.</p>
     </div>
 
   </div>
 
   <section class="legend">
-    <h2>What's in this build (vs yesterday's Sprint 2 snapshot)</h2>
-    <p><strong>Bead refactor</strong> (<code>5853c95</code>) — goal semantics switched from <em>malas</em> to <em>beads</em> end-to-end. Presets are now <code>[11, 54, 108, 1008, 10008]</code> beads with human subtitles. All "MALA X OF Y" text replaced with "BEADS · 108 of 1008". Pre-refactor mala values (1, 3, 11) migrate to 108.</p>
-    <p><strong>UX fixes</strong> (<code>f3f8723</code>) — three watchOS-specific regressions resolved. (1) <code>engine.start()</code> now accepts <code>.discarded</code> as a valid entry state, not just <code>.idle</code>. (2) <code>.sheet</code> presentations replaced with <code>NavigationStack</code> pushes to skip the system clock + X overlay that was invisible on cream. (3) Settings picker rebuilt as tinted segment buttons (no more white-on-cream selected value).</p>
-    <p><strong>New app icon</strong> (<code>5853c95</code>) — swapped the template watch icon for the saffron-gradient mala-bead artwork from the legacy iOS target. Seven watchOS sizes auto-generated via <code>sips</code>.</p>
+    <h2>What's in this build (vs Sprint 2 baseline)</h2>
+    <p><strong>Bead refactor</strong> (<code>5853c95</code>) — goal semantics switched from <em>malas</em> to <em>beads</em> end-to-end. Presets now <code>[11, 54, 108, 1008, 10008]</code>. All "MALA X OF Y" text replaced with "BEADS · 108 of 108" style. Pre-refactor mala values (1, 3, 11) migrate to 108.</p>
+    <p><strong>UX fixes</strong> (<code>f3f8723</code>) — three watchOS-specific regressions resolved. (1) <code>engine.start()</code> now accepts <code>.discarded</code> as a valid entry state, not just <code>.idle</code>. (2) <code>.sheet</code> presentations replaced with <code>NavigationStack</code> pushes to skip the un-stylable system clock + X overlay. (3) Settings picker rebuilt as tinted segment buttons (no more white-on-cream selected value).</p>
+    <p><strong>Dark face theme</strong> — full theme system. Same saffron accent works on both.</p>
+    <p><strong>New app icon</strong> (<code>5853c95</code>) — saffron-gradient mala-bead artwork from the legacy iOS target. Seven watchOS sizes auto-generated via <code>sips</code>.</p>
   </section>
 </main>
 
