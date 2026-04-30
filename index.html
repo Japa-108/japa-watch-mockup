@@ -3,223 +3,599 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Japa 108 Watch — current build</title>
+<title>Japa 108 Watch — design from the iOS CI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@500;600;700&family=Italianno&display=swap" rel="stylesheet">
 <style>
+  /* ===== Design tokens — sourced from the iOS app's shipped assets ===== */
   :root {
-    --cream: #f6ecd9;
-    --cream-dark: #ead9b6;
-    --saffron: #c9851c;
-    --ink: #2a2014;
-    --muted: #7a6a50;
+    --brand:          #FF8A1E;   /* primary action orange (startBubble, tab fill) */
+    --brand-deep:     #FF7A00;
+    --marigold-top:   #F4A024;   /* hero / session gradient top */
+    --marigold-bot:   #D87B17;   /* hero / session gradient bottom */
+    --parchment:      #FDF6E8;   /* off-white surface, monogram fill */
+    --cream:          #F6E8C8;   /* warmer cream for face surfaces */
+    --cream-edge:     #E8D6A8;   /* card / divider edge on cream */
+    --ink:            #2C2A28;   /* warm charcoal text */
+    --ink-muted:      #6B655C;
+    --sacred-green:   #5BA86F;   /* deity vignette / completion accent */
+    --face-dark:      #0F0F0F;   /* watch bezel */
+    --shadow-soft:    0 12px 40px rgba(50, 30, 0, 0.18), 0 4px 14px rgba(0,0,0,0.08);
   }
+
   * { box-sizing: border-box; }
-  html, body {
-    margin: 0; padding: 0;
-    background: var(--cream);
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
     color: var(--ink);
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif;
+    background:
+      radial-gradient(900px 600px at 88% -10%, rgba(244, 160, 36, 0.22) 0%, transparent 55%),
+      radial-gradient(800px 500px at -8% 110%, rgba(216, 123, 23, 0.16) 0%, transparent 55%),
+      linear-gradient(180deg, #FBF6EB 0%, #F1E4C7 100%);
+    min-height: 100vh;
     -webkit-font-smoothing: antialiased;
   }
-  header {
-    padding: 56px 24px 32px;
-    text-align: center;
-    border-bottom: 1px solid var(--cream-dark);
+
+  /* ===== Top nav ===== */
+  .topnav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 28px; position: sticky; top: 0; z-index: 30;
+    background: rgba(251, 246, 235, 0.85); backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
   }
-  header h1 {
-    margin: 0 0 8px;
-    font-size: 36px;
-    font-weight: 600;
-    letter-spacing: -0.5px;
+  .topnav .brand { display: flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; }
+  .topnav .brand .mark { width: 28px; height: 28px; color: var(--brand); }
+  .topnav .brand .wordmark {
+    font-family: "Cormorant Garamond", serif; font-weight: 600;
+    font-size: 22px; line-height: 1; letter-spacing: 0.01em; color: var(--ink);
+    display: inline-flex; align-items: baseline; gap: 2px;
   }
-  header .tagline { margin: 0; color: var(--muted); font-size: 17px; }
-  header .meta {
-    margin: 20px auto 0;
-    max-width: 600px;
-    font-size: 14px;
-    color: var(--muted);
-    line-height: 1.6;
+  .topnav .brand .wordmark .scr {
+    font-family: "Italianno", cursive; font-size: 32px; line-height: 0.7;
+    color: var(--brand); margin-right: 4px; transform: translateY(2px);
   }
-  main {
-    max-width: 1080px;
+  .topnav .navlinks { display: flex; gap: 4px; }
+  .topnav .navlinks a {
+    color: var(--ink-muted); text-decoration: none; font-size: 13px; font-weight: 500;
+    padding: 6px 12px; border-radius: 999px;
+  }
+  .topnav .navlinks a:hover { background: rgba(0,0,0,0.04); color: var(--ink); }
+
+  /* ===== Hero ===== */
+  .hero {
+    margin: 0 auto; max-width: 1180px; padding: 64px 28px 40px; text-align: center;
+  }
+  .hero .eyebrow {
+    display: inline-block; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.22em; text-transform: uppercase; color: var(--brand-deep);
+    padding: 5px 14px; background: rgba(255, 138, 30, 0.10);
+    border: 1px solid rgba(255, 138, 30, 0.32); border-radius: 999px; margin-bottom: 22px;
+  }
+  .hero h1 {
+    margin: 0 0 16px; font-size: clamp(34px, 5.2vw, 56px); font-weight: 700;
+    letter-spacing: -0.025em; line-height: 1.05; color: var(--ink);
+  }
+  .hero h1 .accent {
+    background: linear-gradient(90deg, var(--brand-deep), var(--brand));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .hero .lead {
+    font-size: 17px; color: var(--ink-muted); max-width: 720px;
+    margin: 0 auto 18px; line-height: 1.6;
+  }
+  .hero .meta {
+    display: inline-flex; gap: 18px; flex-wrap: wrap; justify-content: center;
+    padding: 10px 18px; background: white; border: 1px solid var(--cream-edge);
+    border-radius: 14px; box-shadow: 0 2px 14px rgba(180, 130, 40, 0.08);
+    font-size: 13px; color: var(--ink-muted);
+  }
+  .hero .meta b { color: var(--brand-deep); font-weight: 700; }
+  .hero .meta span + span { padding-left: 18px; border-left: 1px solid var(--cream-edge); }
+
+  /* ===== Section ===== */
+  section.flow {
+    max-width: 1180px; margin: 56px auto;
+    padding: 40px 28px;
+    background: white; border: 1px solid var(--cream-edge); border-radius: 28px;
+    box-shadow: 0 10px 40px rgba(180, 130, 40, 0.06);
+  }
+  section.flow .tag {
+    display: inline-block; font-size: 10.5px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase; color: white;
+    padding: 4px 10px; border-radius: 999px;
+    background: linear-gradient(90deg, var(--brand-deep), var(--marigold-top));
+    margin-bottom: 12px;
+  }
+  section.flow h2 {
+    margin: 0 0 8px; font-size: clamp(24px, 3vw, 32px);
+    font-weight: 700; letter-spacing: -0.02em;
+  }
+  section.flow .lead { color: var(--ink-muted); font-size: 15.5px; max-width: 840px; margin: 0 0 28px; }
+
+  .face-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 32px; justify-items: center; margin-top: 16px;
+  }
+  .face-card { width: 100%; max-width: 280px; text-align: center; }
+  .face-card h3 { margin: 16px 0 4px; font-size: 16px; font-weight: 600; color: var(--ink); }
+  .face-card p { margin: 0; font-size: 13px; color: var(--ink-muted); line-height: 1.55; }
+
+  /* ===== Watch face ===== */
+  .watch {
+    width: 234px; height: 286px;
     margin: 0 auto;
-    padding: 40px 24px 80px;
+    border-radius: 56px;
+    background: var(--face-dark);
+    padding: 8px;
+    box-shadow: var(--shadow-soft);
+    position: relative;
   }
-  .section-title {
-    margin: 56px 0 24px;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 1.2px;
-    text-transform: uppercase;
-    color: var(--saffron);
+  .watch::after {
+    /* digital crown bump on the right side */
+    content: ""; position: absolute; top: 90px; right: -3px;
+    width: 6px; height: 36px; border-radius: 3px; background: #2a2a2a;
   }
-  .section-title:first-of-type { margin-top: 0; }
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 32px;
+  .watch .face {
+    width: 100%; height: 100%;
+    border-radius: 50px;
+    overflow: hidden;
+    position: relative;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    color: var(--parchment);
+    font-family: "Inter", system-ui, sans-serif;
   }
-  .card {
-    background: white;
-    border-radius: 16px;
-    padding: 20px 20px 24px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.04);
+  .face.bg-marigold { background: linear-gradient(180deg, var(--marigold-top) 0%, var(--marigold-bot) 100%); }
+  .face.bg-orange   { background: var(--brand); }
+  .face.bg-cream    { background: var(--cream); color: var(--ink); }
+  .face.bg-dark     { background: #0d0d0d; color: var(--parchment); }
+  .face .clock {
+    position: absolute; top: 10px; right: 22px;
+    font-size: 12.5px; font-weight: 700; letter-spacing: 0.02em; opacity: 0.92;
+    font-variant-numeric: tabular-nums;
   }
-  .card.dark img { background: #111; }
-  .card img {
-    width: 100%;
-    height: auto;
-    border-radius: 36px;
-    display: block;
-    margin-bottom: 16px;
-    background: var(--cream);
+  .face .caps {
+    font-size: 9px; font-weight: 700; letter-spacing: 0.22em;
+    text-transform: uppercase; opacity: 0.85;
   }
-  .card h3 {
-    margin: 0 0 6px;
-    font-size: 17px;
-    font-weight: 600;
+  .face .num {
+    font-family: "Inter", system-ui, sans-serif;
+    font-weight: 700; font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em; line-height: 1;
   }
-  .card .caption {
-    margin: 0;
-    font-size: 14px;
-    color: var(--muted);
-    line-height: 1.55;
+  .face .pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 9px 22px; border-radius: 999px;
+    background: var(--parchment); color: var(--brand-deep);
+    font-size: 13px; font-weight: 600;
   }
-  .card .caption code {
-    background: var(--cream);
-    padding: 1px 5px;
-    border-radius: 4px;
-    font-size: 12.5px;
+  .face .pill.ghost { background: transparent; color: var(--parchment); border: 1.5px solid rgba(253,246,232,0.55); }
+  .face .pill.ink   { background: var(--ink); color: var(--parchment); }
+  .face .row { display: flex; gap: 12px; align-items: center; justify-content: center; }
+  .face .icon-btn {
+    width: 42px; height: 42px; border-radius: 999px;
+    background: rgba(253, 246, 232, 0.18);
+    border: 1px solid rgba(253, 246, 232, 0.32);
+    display: flex; align-items: center; justify-content: center;
   }
-  section.legend {
-    margin-top: 64px;
-    padding: 24px 28px;
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  .face .icon-btn.solid { background: var(--parchment); border: none; }
+  .face .icon-btn svg { width: 20px; height: 20px; }
+  .face .stack > * + * { margin-top: 8px; }
+
+  /* mala monogram sizing */
+  .mono { width: 56px; height: 56px; color: var(--parchment); }
+  .mono.brand { color: var(--brand); }
+  .mono.cream { color: var(--cream); }
+  .mono.ink   { color: var(--ink); }
+  .mono.sm    { width: 36px; height: 36px; }
+  .mono.lg    { width: 78px; height: 78px; }
+
+  /* watch list rows (goal picker, settings) */
+  .face .list { width: 100%; padding: 36px 14px 12px; align-self: stretch; flex: 1; overflow: hidden; }
+  .face .list .row-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 9px 12px; border-radius: 12px;
+    font-size: 13px; font-weight: 500;
   }
-  section.legend h2 {
-    margin: 0 0 14px;
-    font-size: 18px;
-    font-weight: 600;
+  .face .list .row-item + .row-item { margin-top: 4px; }
+  .face .list .row-item.active { background: var(--brand); color: var(--parchment); }
+  .face .list .row-item .sub { font-size: 10.5px; opacity: 0.7; font-weight: 500; }
+  .face .list .row-item.active .sub { opacity: 0.92; }
+
+  /* segments (first-run picker, settings) */
+  .face .seg {
+    display: flex; gap: 6px; padding: 4px;
+    background: rgba(0,0,0,0.06); border-radius: 999px;
+    width: 88%;
   }
-  section.legend p {
-    margin: 0 0 10px;
-    font-size: 14px;
-    color: var(--muted);
-    line-height: 1.65;
+  .face .seg .opt {
+    flex: 1; text-align: center; padding: 7px 0;
+    border-radius: 999px; font-size: 12px; font-weight: 600;
+    color: var(--ink-muted);
   }
-  section.legend code {
-    background: var(--cream);
-    padding: 1px 6px;
-    border-radius: 4px;
-    font-size: 12.5px;
+  .face .seg .opt.active { background: var(--brand); color: var(--parchment); }
+
+  .face.bg-cream .list .row-item:not(.active) { color: var(--ink); }
+  .face.bg-cream .list .row-item:not(.active) .sub { color: var(--ink-muted); }
+
+  /* ring progress face */
+  .ring-wrap { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative; }
+  .ring-wrap svg { width: 188px; height: 188px; }
+  .ring-center {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    pointer-events: none;
   }
+
+  /* radial glow (lit-from-within) */
+  .glow {
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 50% 38%, rgba(253,246,232,0.32) 0%, transparent 55%);
+    pointer-events: none;
+  }
+
+  /* ===== Tokens legend ===== */
+  .tokens {
+    max-width: 1180px; margin: 56px auto;
+    padding: 0 28px;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+  }
+  .token {
+    background: white; border: 1px solid var(--cream-edge); border-radius: 14px;
+    padding: 14px 16px; font-size: 12.5px; color: var(--ink-muted); line-height: 1.5;
+  }
+  .token .swatch {
+    width: 100%; height: 40px; border-radius: 8px;
+    margin-bottom: 10px; border: 1px solid rgba(0,0,0,0.06);
+  }
+  .token b { display: block; color: var(--ink); font-weight: 600; font-size: 13px; }
+  .token code {
+    font-family: ui-monospace, "SF Mono", monospace;
+    font-size: 11.5px; color: var(--brand-deep);
+  }
+
+  /* ===== CI source row ===== */
+  .ci-row {
+    max-width: 1180px; margin: 56px auto; padding: 0 28px;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+  }
+  .ci-cell {
+    background: white; border: 1px solid var(--cream-edge); border-radius: 14px;
+    padding: 14px; text-align: center;
+  }
+  .ci-cell .label {
+    font-size: 10.5px; font-weight: 700; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--ink-muted); margin-top: 8px;
+  }
+  .ci-cell .demo { height: 56px; display: flex; align-items: center; justify-content: center; }
+
   footer {
-    text-align: center;
-    padding: 32px 24px 56px;
-    color: var(--muted);
-    font-size: 13px;
+    text-align: center; padding: 40px 24px 56px;
+    color: var(--ink-muted); font-size: 13px;
   }
-  footer a { color: var(--saffron); text-decoration: none; }
+  footer a { color: var(--brand-deep); text-decoration: none; font-weight: 500; }
   footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 640px) {
+    .topnav { padding: 14px 16px; }
+    .topnav .navlinks { display: none; }
+    section.flow { padding: 28px 18px; margin: 36px 12px; border-radius: 22px; }
+    .hero { padding: 40px 16px 24px; }
+    .tokens, .ci-row { padding: 0 16px; }
+  }
 </style>
+
+<!-- Reusable SVG symbols ============================================== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mala-mono" viewBox="0 0 100 100">
+    <g fill="currentColor">
+      <circle cx="50" cy="14" r="6.5"/><circle cx="64" cy="17" r="6.5"/>
+      <circle cx="76" cy="25" r="6.5"/><circle cx="84" cy="37" r="6.5"/>
+      <circle cx="86" cy="51" r="6.5"/><circle cx="83" cy="64" r="6.5"/>
+      <polygon points="79,71 92,79 76,87"/>
+      <circle cx="36" cy="17" r="6.5"/><circle cx="24" cy="25" r="6.5"/>
+      <circle cx="16" cy="37" r="6.5"/><circle cx="14" cy="51" r="6.5"/>
+      <circle cx="17" cy="64" r="6.5"/><circle cx="26" cy="74" r="6.5"/>
+      <circle cx="40" cy="80" r="6.5"/><circle cx="55" cy="82" r="6.5"/>
+    </g>
+  </symbol>
+  <symbol id="ic-share" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3v12"/><polyline points="7 8 12 3 17 8"/><path d="M5 21h14"/>
+    </g>
+  </symbol>
+  <symbol id="ic-pause" viewBox="0 0 24 24">
+    <g fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></g>
+  </symbol>
+  <symbol id="ic-check" viewBox="0 0 24 24">
+    <polyline points="5 12 10 17 19 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="ic-gear" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>
+    </g>
+  </symbol>
+  <symbol id="ic-flame" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M12 2c0 4-5 5-5 10a5 5 0 0 0 10 0c0-2-1-3-1-5 1 1 3 3 3 6a7 7 0 0 1-14 0c0-6 7-7 7-11z"/>
+  </symbol>
+</svg>
 </head>
 <body>
-<header>
-  <h1>Japa 108 Watch</h1>
-  <p class="tagline">Standalone Apple Watch app — current build</p>
-  <p class="meta">
-    Captured 2026-04-21 on Apple Watch Series 10 (46mm) / watchOS 11.2 simulator.
-    Post Sprint&nbsp;2 refactor: goal semantics in <strong>beads</strong> end-to-end,
-    <strong>cream + dark</strong> face themes, <strong>Ring + Number</strong> display modes,
-    sheet-overlay and picker-contrast UX fixes. All 66 tests pass.
-  </p>
-</header>
 
-<main>
+<!-- ============ Top nav ============ -->
+<nav class="topnav">
+  <a class="brand" href="#">
+    <svg class="mark"><use href="#mala-mono"/></svg>
+    <span class="wordmark"><span class="scr">japa</span>1<svg style="width:14px;height:14px;color:var(--brand);vertical-align:-1px;"><use href="#mala-mono"/></svg>8</span>
+  </a>
+  <div class="navlinks">
+    <a href="#flow">Flow</a>
+    <a href="#tokens">Tokens</a>
+    <a href="#ci">CI sources</a>
+  </div>
+</nav>
 
-  <p class="section-title">Onboarding</p>
-  <div class="grid">
+<!-- ============ Hero ============ -->
+<section class="hero">
+  <span class="eyebrow">Apple Watch · design v2</span>
+  <h1>A Watch face that <span class="accent">feels native to the iPhone app</span></h1>
+  <p class="lead">Re-designed from scratch using the iOS app's corporate identity — the marigold-to-amber gradient, brand-orange accents, parchment cream foreground, and the mala monogram as the master mark. Open Watch + iPhone side by side and it's one product.</p>
+  <div class="meta">
+    <span><b>7</b> screens</span>
+    <span><b>3</b> count modes preserved</span>
+    <span><b>108</b> beads · sacred</span>
+    <span>Pause · Resume · Share</span>
+  </div>
+</section>
 
-    <div class="card">
-      <img src="screens/01-choose-display.png?v=3" alt="Choose your display">
-      <h3>1. Choose your display (first run)</h3>
-      <p class="caption">Pick Ring (circular progress) or Number (large digit, VoiceOver-recommended). Remembered per-user. The "of 1008" hint reflects the bead-count refactor (<code>5853c95</code>).</p>
+<!-- ============ Flow ============ -->
+<section class="flow" id="flow">
+  <span class="tag">The full daily loop</span>
+  <h2>First run · home · session · complete</h2>
+  <p class="lead">Seven faces walking the user from first launch through one mala. All five Japa108-specific rules are honored: 108 is sacred, three count modes coexist, sessions are pausable, every completion is shareable, streak / count / minutes are co-equal.</p>
+
+  <div class="face-grid">
+
+    <!-- 1. First-run · choose display -->
+    <div class="face-card">
+      <div class="watch">
+        <div class="face bg-dark">
+          <span class="clock">10:30</span>
+          <svg class="mono brand" style="width:42px;height:42px;margin-bottom:14px;"><use href="#mala-mono"/></svg>
+          <div class="caps" style="margin-bottom:14px;color:var(--parchment);">Choose your display</div>
+          <div class="seg" style="background:rgba(253,246,232,0.10);">
+            <div class="opt active">Ring</div>
+            <div class="opt" style="color:var(--parchment);">Number</div>
+          </div>
+          <div class="caps" style="margin-top:18px;opacity:0.6;font-size:8.5px;letter-spacing:0.18em;">VoiceOver · pick Number</div>
+        </div>
+      </div>
+      <h3>1. First run · pick a display</h3>
+      <p>Ring (circular progress) or Number (large digit, VoiceOver-friendly). Stored per-user.</p>
     </div>
 
-    <div class="card">
-      <img src="screens/02-home-cream.png?v=3" alt="Home screen, cream theme">
+    <!-- 2. Home -->
+    <div class="face-card">
+      <div class="watch">
+        <div class="face bg-marigold">
+          <span class="clock">10:32</span>
+          <div class="glow"></div>
+          <div class="stack" style="text-align:center; position:relative;">
+            <svg class="mono cream lg" style="margin: 0 auto 4px; display:block;"><use href="#mala-mono"/></svg>
+            <div class="caps">108 Beads · One Mala</div>
+            <div class="pill" style="margin-top:8px;">Start</div>
+            <div class="caps" style="opacity:0.78; margin-top:14px; display:flex; align-items:center; justify-content:center; gap:5px;">
+              <svg style="width:11px;height:11px;color:var(--parchment)"><use href="#ic-flame"/></svg> 12-day streak
+            </div>
+          </div>
+        </div>
+      </div>
       <h3>2. Home — ready to start</h3>
-      <p class="caption">Saffron Start button shows the current goal in beads. Gear opens Settings, "Change goal" jumps to the picker.</p>
+      <p>Mala monogram is the brand anchor. Streak echoes Home tab on iPhone. Goal stated in beads.</p>
     </div>
 
-    <div class="card">
-      <img src="screens/03-goal-picker.png?v=3" alt="Goal picker">
-      <h3>3. Goal picker (post-refactor)</h3>
-      <p class="caption">Presets are <code>11 / 54 / 108 / 1008 / 10008</code> beads with subtitles ("Quick practice", "Half mala", "One mala", "Nine malas", "Mahā count"). Plus a Custom entry.</p>
+    <!-- 3. Goal picker -->
+    <div class="face-card">
+      <div class="watch">
+        <div class="face bg-cream" style="justify-content:flex-start;">
+          <span class="clock" style="color:var(--ink);">10:32</span>
+          <div class="caps" style="color:var(--brand-deep); margin-top:30px;">Goal · beads</div>
+          <div class="list">
+            <div class="row-item"><span>11</span><span class="sub">Quick</span></div>
+            <div class="row-item"><span>54</span><span class="sub">Half mala</span></div>
+            <div class="row-item active"><span>108</span><span class="sub">One mala</span></div>
+            <div class="row-item"><span>1008</span><span class="sub">Nine malas</span></div>
+            <div class="row-item"><span>10008</span><span class="sub">Mahā count</span></div>
+          </div>
+        </div>
+      </div>
+      <h3>3. Goal picker</h3>
+      <p>Cream face, brand-orange selection. Presets are bead counts. "Custom" lives below the fold.</p>
     </div>
 
-  </div>
-
-  <p class="section-title">Counting — both display modes</p>
-  <div class="grid">
-
-    <div class="card">
-      <img src="screens/04-counting-ring-cream.png?v=3" alt="Counting in Ring mode, cream theme">
-      <h3>4. Ring display (cream)</h3>
-      <p class="caption">Bead chain wraps the dial; current count fills in saffron. "BEADS · 84 of 108" mid-mala. Mala-boundary haptic fires every 108 taps.</p>
+    <!-- 4. Counting · Ring (cream) -->
+    <div class="face-card">
+      <div class="watch">
+        <div class="face bg-cream">
+          <span class="clock" style="color:var(--ink);">10:34</span>
+          <div class="ring-wrap">
+            <svg viewBox="0 0 200 200" aria-hidden="true">
+              <!-- 18 stylized beads, 14 filled brand-orange (≈84/108) -->
+              <g>
+                <circle cx="100" cy="22"  r="6.5" fill="#FF8A1E"/>
+                <circle cx="127" cy="27"  r="6.5" fill="#FF8A1E"/>
+                <circle cx="151" cy="40"  r="6.5" fill="#FF8A1E"/>
+                <circle cx="170" cy="60"  r="6.5" fill="#FF8A1E"/>
+                <circle cx="180" cy="86"  r="6.5" fill="#FF8A1E"/>
+                <circle cx="180" cy="114" r="6.5" fill="#FF8A1E"/>
+                <circle cx="170" cy="140" r="6.5" fill="#FF8A1E"/>
+                <circle cx="151" cy="160" r="6.5" fill="#FF8A1E"/>
+                <circle cx="127" cy="173" r="6.5" fill="#FF8A1E"/>
+                <circle cx="100" cy="178" r="6.5" fill="#FF8A1E"/>
+                <circle cx="73"  cy="173" r="6.5" fill="#FF8A1E"/>
+                <circle cx="49"  cy="160" r="6.5" fill="#FF8A1E"/>
+                <circle cx="30"  cy="140" r="6.5" fill="#FF8A1E"/>
+                <circle cx="20"  cy="114" r="6.5" fill="#FF8A1E"/>
+                <circle cx="20"  cy="86"  r="6.5" fill="none" stroke="#E8D6A8" stroke-width="1.6"/>
+                <circle cx="30"  cy="60"  r="6.5" fill="none" stroke="#E8D6A8" stroke-width="1.6"/>
+                <circle cx="49"  cy="40"  r="6.5" fill="none" stroke="#E8D6A8" stroke-width="1.6"/>
+                <circle cx="73"  cy="27"  r="6.5" fill="none" stroke="#E8D6A8" stroke-width="1.6"/>
+              </g>
+            </svg>
+            <div class="ring-center">
+              <div class="caps" style="color:var(--brand-deep); margin-bottom:4px;">Beads</div>
+              <div class="num" style="color:var(--ink); font-size:54px;">84</div>
+              <div class="caps" style="color:var(--ink-muted); margin-top:2px;">of 108</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <h3>4. Counting · Ring mode</h3>
+      <p>Bead chain wraps the dial; brand-orange fills as you tap. Haptic at each bead, double-haptic at every 108 (mala boundary).</p>
     </div>
 
-    <div class="card dark">
-      <img src="screens/05-counting-number-dark.png?v=3" alt="Counting in Number mode, dark theme">
-      <h3>5. Number display (dark)</h3>
-      <p class="caption">Big digit + "of 108" subtitle. Maximum legibility for low-light japa or VoiceOver users.</p>
+    <!-- 5. Counting · Number (orange) -->
+    <div class="face-card">
+      <div class="watch">
+        <div class="face bg-orange">
+          <span class="clock" style="opacity:0.92;">10:34</span>
+          <div class="caps" style="margin-bottom:4px;">Beads</div>
+          <div class="num" style="font-size:96px; color:var(--parchment);">84</div>
+          <div class="caps" style="margin-top:4px; opacity:0.86;">of 108</div>
+          <div class="row" style="margin-top:14px;">
+            <div class="icon-btn" aria-label="Pause"><svg style="color:var(--parchment);"><use href="#ic-pause"/></svg></div>
+            <div class="icon-btn" aria-label="Done"><svg style="color:var(--parchment);"><use href="#ic-check"/></svg></div>
+          </div>
+        </div>
+      </div>
+      <h3>5. Counting · Number mode</h3>
+      <p>Solid brand orange — VoiceOver and low-light japa. Same pause + done semantics as the ring face.</p>
     </div>
 
-    <div class="card">
-      <img src="screens/06-session-complete.png?v=3" alt="Session complete screen">
+    <!-- 6. Session complete -->
+    <div class="face-card">
+      <div class="watch">
+        <div class="face bg-marigold">
+          <span class="clock">10:41</span>
+          <div class="glow" style="background: radial-gradient(circle at 50% 38%, rgba(253,246,232,0.42) 0%, transparent 60%);"></div>
+          <div style="position: relative; text-align: center;">
+            <svg class="mono cream" style="width:64px; height:64px; filter: drop-shadow(0 6px 24px rgba(0,0,0,0.18));"><use href="#mala-mono"/></svg>
+            <div class="caps" style="margin-top:10px; letter-spacing:0.26em;">Mala Complete</div>
+            <div class="num" style="font-size:30px; margin:6px 0 2px;">108</div>
+            <div class="caps" style="opacity:0.82;">7 min · streak +1</div>
+            <div class="row" style="margin-top:14px;">
+              <div class="icon-btn" aria-label="Share"><svg style="color:var(--parchment);"><use href="#ic-share"/></svg></div>
+              <div class="icon-btn solid" aria-label="Done"><svg style="color:var(--brand-deep);"><use href="#ic-check"/></svg></div>
+            </div>
+          </div>
+        </div>
+      </div>
       <h3>6. Session complete</h3>
-      <p class="caption">Full ring lights up at goal. Total beads + minutes shown. Saffron "Done" returns to home; secondary action to log/share.</p>
+      <p>Lit-from-within glow honors the iPhone Counter-complete face. Share is first-class — every completion is shareable.</p>
+    </div>
+
+    <!-- 7. Settings -->
+    <div class="face-card">
+      <div class="watch">
+        <div class="face bg-cream" style="justify-content:flex-start;">
+          <span class="clock" style="color:var(--ink);">10:42</span>
+          <div class="caps" style="color:var(--brand-deep); margin: 30px 0 6px;">Face theme</div>
+          <div class="seg">
+            <div class="opt active">Cream</div>
+            <div class="opt">Marigold</div>
+          </div>
+          <div class="caps" style="color:var(--brand-deep); margin: 16px 0 6px;">Display</div>
+          <div class="seg">
+            <div class="opt">Ring</div>
+            <div class="opt active">Number</div>
+          </div>
+          <div class="caps" style="opacity:0.7; margin-top:18px; font-size:8.5px;">Long-press dial to switch quickly</div>
+        </div>
+      </div>
+      <h3>7. Settings</h3>
+      <p>Two segment controls — face theme and display mode. Brand-orange selection unambiguous in either theme.</p>
     </div>
 
   </div>
+</section>
 
-  <p class="section-title">Settings — both themes</p>
-  <div class="grid">
-
-    <div class="card">
-      <img src="screens/07-settings-cream.png?v=3" alt="Settings, cream theme">
-      <h3>7. Settings — cream</h3>
-      <p class="caption">Face theme + Display mode as explicit segment buttons. <code>f3f8723</code> rebuilt this from a Form/Picker that rendered selected text invisibly white-on-cream.</p>
-    </div>
-
-    <div class="card dark">
-      <img src="screens/08-settings-dark.png?v=3" alt="Settings, dark theme">
-      <h3>8. Settings — dark</h3>
-      <p class="caption">Same component, dark face. Display switched here to Number — selection is unambiguous in either theme.</p>
-    </div>
-
-    <div class="card dark">
-      <img src="screens/09-settings-account.png?v=3" alt="Settings scrolled to Account">
-      <h3>9. Account &amp; About</h3>
-      <p class="caption">Sign out (saffron, destructive). Version row shows build identity for support.</p>
-    </div>
-
+<!-- ============ Tokens ============ -->
+<h2 style="max-width:1180px;margin:64px auto 18px;padding:0 28px;font-size:13px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink-muted);" id="tokens">Design tokens · sourced from the iOS asset catalog</h2>
+<div class="tokens">
+  <div class="token">
+    <div class="swatch" style="background: linear-gradient(180deg, #F4A024, #D87B17);"></div>
+    <b>Marigold gradient</b><code>#F4A024 → #D87B17</code><br>Hero, session, complete face.
   </div>
+  <div class="token">
+    <div class="swatch" style="background: #FF8A1E;"></div>
+    <b>Brand orange</b><code>#FF8A1E</code><br>Number-mode bg, ring fill, accents.
+  </div>
+  <div class="token">
+    <div class="swatch" style="background: #FDF6E8; border-color: #E8D6A8;"></div>
+    <b>Parchment cream</b><code>#FDF6E8</code><br>Numerals, monogram, pill buttons.
+  </div>
+  <div class="token">
+    <div class="swatch" style="background: #F6E8C8; border-color: #E8D6A8;"></div>
+    <b>Cream face</b><code>#F6E8C8</code><br>Goal picker, settings, ring face surface.
+  </div>
+  <div class="token">
+    <div class="swatch" style="background: #2C2A28;"></div>
+    <b>Warm charcoal</b><code>#2C2A28</code><br>Body text on cream.
+  </div>
+</div>
 
-  <section class="legend">
-    <h2>What's in this build (vs Sprint 2 baseline)</h2>
-    <p><strong>Bead refactor</strong> (<code>5853c95</code>) — goal semantics switched from <em>malas</em> to <em>beads</em> end-to-end. Presets now <code>[11, 54, 108, 1008, 10008]</code>. All "MALA X OF Y" text replaced with "BEADS · 108 of 108" style. Pre-refactor mala values (1, 3, 11) migrate to 108.</p>
-    <p><strong>UX fixes</strong> (<code>f3f8723</code>) — three watchOS-specific regressions resolved. (1) <code>engine.start()</code> now accepts <code>.discarded</code> as a valid entry state, not just <code>.idle</code>. (2) <code>.sheet</code> presentations replaced with <code>NavigationStack</code> pushes to skip the un-stylable system clock + X overlay. (3) Settings picker rebuilt as tinted segment buttons (no more white-on-cream selected value).</p>
-    <p><strong>Dark face theme</strong> — full theme system. Same saffron accent works on both.</p>
-    <p><strong>New app icon</strong> (<code>5853c95</code>) — saffron-gradient mala-bead artwork from the legacy iOS target. Seven watchOS sizes auto-generated via <code>sips</code>.</p>
-  </section>
-</main>
+<!-- ============ CI sources ============ -->
+<h2 style="max-width:1180px;margin:64px auto 18px;padding:0 28px;font-size:13px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink-muted);" id="ci">CI sources · the iOS assets this redesign is grounded in</h2>
+<div class="ci-row">
+  <div class="ci-cell">
+    <div class="demo">
+      <svg style="width:40px;height:40px;color:var(--brand);"><use href="#mala-mono"/></svg>
+    </div>
+    <div class="label">Mala monogram</div>
+  </div>
+  <div class="ci-cell">
+    <div class="demo">
+      <div style="width:46px;height:46px;border-radius:50%;background:var(--brand);display:flex;align-items:center;justify-content:center;">
+        <svg style="width:30px;height:30px;color:var(--parchment);"><use href="#mala-mono"/></svg>
+      </div>
+    </div>
+    <div class="label">Start FAB · inverted</div>
+  </div>
+  <div class="ci-cell">
+    <div class="demo">
+      <span class="wordmark" style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:24px;display:inline-flex;align-items:baseline;gap:2px;">
+        <span style="font-family:'Italianno',cursive;font-size:36px;line-height:0.7;color:var(--brand);transform:translateY(2px);margin-right:4px;">japa</span>1<svg style="width:14px;height:14px;color:var(--brand);vertical-align:-1px"><use href="#mala-mono"/></svg>8
+      </span>
+    </div>
+    <div class="label">Wordmark</div>
+  </div>
+  <div class="ci-cell">
+    <div class="demo">
+      <div style="width:54px;height:54px;border-radius:14px;background:white;border:2px solid var(--brand);position:relative;">
+        <div style="position:absolute;top:-8px;right:-8px;width:22px;height:22px;border-radius:50%;background:var(--brand);display:flex;align-items:center;justify-content:center;">
+          <svg style="width:14px;height:14px;color:var(--parchment);"><use href="#ic-check"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="label">Card · stroked</div>
+  </div>
+  <div class="ci-cell">
+    <div class="demo">
+      <div style="width:50px;height:50px;border-radius:50%;background:radial-gradient(circle at 35% 35%, #b8e0c4, #5BA86F 75%);"></div>
+    </div>
+    <div class="label">Deity vignette · mint</div>
+  </div>
+</div>
 
 <footer>
-  Source: <a href="https://github.com/Pradeepgman/Japa108-iOS/tree/feature/watch-japa-counter-apple-watch/Japa%20108%20Watch%20App%20Watch%20App">Pradeepgman/Japa108-iOS</a>
-  · Branch <code>feature/watch-japa-counter-apple-watch</code>
-  · This site: <a href="https://github.com/Japa-108/japa-watch-mockup">Japa-108/japa-watch-mockup</a>
+  Mockup only · visual plan, not final UI · branch <code style="background:white;padding:2px 6px;border-radius:4px;border:1px solid var(--cream-edge);">feature/redesign-original-app-fidelity</code><br>
+  CI source: <a href="https://github.com/Japa-108/japa108-original-app-assets">Japa-108/japa108-original-app-assets</a> · Watch app code: <a href="https://github.com/Pradeepgman/Japa108-iOS/tree/feature/watch-japa-counter-apple-watch">Pradeepgman/Japa108-iOS</a>
 </footer>
+
 </body>
 </html>
